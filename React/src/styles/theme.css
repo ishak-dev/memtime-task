@@ -1,0 +1,32 @@
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --text: #1a1d23;
+  --text-muted: #6b7280;
+  --border: #e6e9ef;
+  --primary: #1f6feb;
+  --primary-soft: #e8f1ff;
+  --danger: #c62828;
+  --success: #1b7a4a;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.04);
+  --accent-1: #2ea44f;
+  --accent-2: #f5a623;
+  --accent-3: #e91e8c;
+  --accent-4: #9b59b6;
+  --accent-5: #3b82f6;
+  --font: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}

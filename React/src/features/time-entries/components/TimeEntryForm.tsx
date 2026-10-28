@@ -1,5 +1,6 @@
 import type { TimeEntry } from '../../../types/api'
 import { useTimeEntryFormViewModel } from '../hooks/useTimeEntryForm'
+import './TimeEntryForm.css'
 
 type TimeEntryFormProps = {
   selectedTaskId: number | null
@@ -30,19 +31,17 @@ export function TimeEntryForm({
   })
 
   return (
-    <section className="time-entry-form">
-      <header className="time-entry-form-header">
-        <h2>
-          {isEditing ? `Update Time Entry #${editingEntryId}` : 'Create New Time Entry'}
-        </h2>
+    <section className="time-entry-form-panel">
+      <header className="time-entry-form-panel__header">
+        <h2>{isEditing ? `Update #${editingEntryId}` : 'New time entry'}</h2>
         {isEditing && (
-          <button type="button" className="secondary-button" onClick={startCreate}>
+          <button type="button" className="time-entry-form-panel__secondary" onClick={startCreate}>
             New entry
           </button>
         )}
       </header>
 
-      <form className="time-entry-form-body" onSubmit={submit}>
+      <form className="time-entry-form-panel__body" onSubmit={submit}>
         <label>
           Task ID
           <input
@@ -84,14 +83,26 @@ export function TimeEntryForm({
           />
         </label>
 
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" className="time-entry-form-panel__submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving…' : isEditing ? 'Update entry' : 'Create entry'}
         </button>
       </form>
 
-      {validationError && <p className="form-message form-message-error">{validationError}</p>}
-      {apiErrorMessage && <p className="form-message form-message-error">{apiErrorMessage}</p>}
-      {successMessage && <p className="form-message form-message-success">{successMessage}</p>}
+      {validationError && (
+        <p className="time-entry-form-panel__message time-entry-form-panel__message--error">
+          {validationError}
+        </p>
+      )}
+      {apiErrorMessage && (
+        <p className="time-entry-form-panel__message time-entry-form-panel__message--error">
+          {apiErrorMessage}
+        </p>
+      )}
+      {successMessage && (
+        <p className="time-entry-form-panel__message time-entry-form-panel__message--success">
+          {successMessage}
+        </p>
+      )}
     </section>
   )
 }

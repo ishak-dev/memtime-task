@@ -1,5 +1,8 @@
 import { memo } from 'react'
+import { getAccentColor } from '../../../shared/utils/accentColor'
+import { formatDuration, formatTimeRange } from '../../../shared/utils/duration'
 import type { TimeEntry } from '../../../types/api'
+import './TimeEntriesList.css'
 
 type TimeEntriesListProps = {
   timeEntries: TimeEntry[]
@@ -12,10 +15,6 @@ type TimeEntriesListProps = {
   onPrevious: () => void
   onNext: () => void
   onEdit: (entry: TimeEntry) => void
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleString()
 }
 
 export const TimeEntriesList = memo(function TimeEntriesList({
@@ -34,15 +33,19 @@ export const TimeEntriesList = memo(function TimeEntriesList({
   const hasPrevious = offset > 0
 
   return (
-    <section className="time-entries">
-      <header className="time-entries-header">
-        <h2>
-          Time Entries
-          {selectedTaskId !== null ? ` · Task ${selectedTaskId}` : ''}
-        </h2>
-        <div className="pagination">
+    <section className="time-entries-panel">
+      <header className="time-entries-panel__header">
+        <div>
+          <h2>Time Entries</h2>
+          <span className="time-entries-panel__pill">
+            {selectedTaskId !== null
+              ? `Task ${selectedTaskId}`
+              : 'Create your time entries here'}
+          </span>
+        </div>
+        <div className="time-entries-panel__pagination">
           <button type="button" onClick={onPrevious} disabled={!hasPrevious || loading}>
-            Previous
+            Prev
           </button>
           <span>Page {page}</span>
           <button type="button" onClick={onNext} disabled={!hasNext || loading}>
@@ -51,50 +54,42 @@ export const TimeEntriesList = memo(function TimeEntriesList({
         </div>
       </header>
 
-      {loading && <p className="column-status">Loading time entries…</p>}
-      {error && <p className="column-status">{error}</p>}
-      {!loading && !error && timeEntries.length === 0 && (
-        <p className="column-empty">
-          {selectedTaskId !== null
-            ? 'No time entries for this task'
-            : 'No time entries found'}
-        </p>
-      )}
+      <div className="time-entries-panel__body">
+        {loading && <p className="time-entries-panel__status">Loading time entries…</p>}
+        {error && <p className="time-entries-panel__status">{error}</p>}
+        {!loading && !error && timeEntries.length === 0 && (
+          <p className="time-entries-panel__empty">
+            {selectedTaskId !== null
+              ? 'No time entries for this task'
+              : 'No time entries found'}
+          </p>
+        )}
 
-      {!loading && !error && timeEntries.length > 0 && (
-        <div className="table-wrap">
-          <table className="time-entries-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Task ID</th>
-                <th>Comment</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Created At</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {timeEntries.map((entry) => (
-                <tr key={entry.id}>
-                  <td>{entry.id}</td>
-                  <td>{entry.taskId}</td>
-                  <td>{entry.comment}</td>
-                  <td>{formatDate(entry.start)}</td>
-                  <td>{formatDate(entry.end)}</td>
-                  <td>{formatDate(entry.createdAt)}</td>
-                  <td>
-                    <button type="button" className="link-button" onClick={() => onEdit(entry)}>
-                      Edit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        {!loading &&
+          !error &&
+          timeEntries.map((entry) => (
+            <button
+              key={entry.id}
+              type="button"
+              className="time-entry-block"
+              style={{ background: getAccentColor(entry.taskId) }}
+              onClick={() => onEdit(entry)}
+            >
+              <div className="time-entry-block__top">
+                <span className="time-entry-block__title">
+                  {entry.comment || `Entry #${entry.id}`}
+                </span>
+                <span className="time-entry-block__duration">
+                  {formatDuration(entry.start, entry.end)}
+                </span>
+              </div>
+              <div className="time-entry-block__meta">
+                <span>Task {entry.taskId}</span>
+                <span>{formatTimeRange(entry.start, entry.end)}</span>
+              </div>
+            </button>
+          ))}
+      </div>
     </section>
   )
 })

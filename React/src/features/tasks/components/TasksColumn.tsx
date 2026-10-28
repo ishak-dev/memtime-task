@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import type { Task } from '../../../types/api'
+import './TasksColumn.css'
 
 type TasksColumnProps = {
   tasks: Task[]
@@ -19,14 +20,18 @@ export const TasksColumn = memo(function TasksColumn({
   onSelect,
 }: TasksColumnProps) {
   return (
-    <section className="column">
-      <header className="column-header">Tasks</header>
-      <div className="column-body">
-        {!hasProject && <p className="column-empty">Select a project</p>}
-        {hasProject && loading && <p className="column-status">Loading tasks…</p>}
-        {hasProject && error && <p className="column-status">{error}</p>}
+    <section className="tasks-panel">
+      <header className="tasks-panel__header">
+        <h2>Tasks</h2>
+        <span className="tasks-panel__pill">Filter time entries</span>
+      </header>
+
+      <div className="tasks-panel__body">
+        {!hasProject && <p className="tasks-panel__empty">Select a project</p>}
+        {hasProject && loading && <p className="tasks-panel__status">Loading tasks…</p>}
+        {hasProject && error && <p className="tasks-panel__status">{error}</p>}
         {hasProject && !loading && !error && tasks.length === 0 && (
-          <p className="column-empty">No tasks found</p>
+          <p className="tasks-panel__empty">No tasks found</p>
         )}
         {hasProject &&
           !loading &&
@@ -35,11 +40,11 @@ export const TasksColumn = memo(function TasksColumn({
             <button
               key={task.id}
               type="button"
-              className={`list-item${selectedId === task.id ? ' active' : ''}`}
+              className={`tasks-panel__item${selectedId === task.id ? ' is-active' : ''}`}
               onClick={() => onSelect(task)}
             >
-              <span className="list-item-title">{task.name}</span>
-              <span className="list-item-meta">{task.status}</span>
+              <span className="tasks-panel__item-title">{task.name}</span>
+              <span className="tasks-panel__item-meta">{task.status}</span>
             </button>
           ))}
       </div>

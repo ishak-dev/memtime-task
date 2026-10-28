@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import type { Client } from '../../../types/api'
+import './ClientsColumn.css'
 
 type ClientsColumnProps = {
   clients: Client[]
@@ -17,13 +18,17 @@ export const ClientsColumn = memo(function ClientsColumn({
   onSelect,
 }: ClientsColumnProps) {
   return (
-    <section className="column">
-      <header className="column-header">Clients</header>
-      <div className="column-body">
-        {loading && <p className="column-status">Loading clients…</p>}
-        {error && <p className="column-status">{error}</p>}
+    <section className="clients-panel">
+      <header className="clients-panel__header">
+        <h2>Clients</h2>
+        <span className="clients-panel__pill">Browse hierarchy</span>
+      </header>
+
+      <div className="clients-panel__body">
+        {loading && <p className="clients-panel__status">Loading clients…</p>}
+        {error && <p className="clients-panel__status">{error}</p>}
         {!loading && !error && clients.length === 0 && (
-          <p className="column-empty">No clients found</p>
+          <p className="clients-panel__empty">No clients found</p>
         )}
         {!loading &&
           !error &&
@@ -31,14 +36,18 @@ export const ClientsColumn = memo(function ClientsColumn({
             <button
               key={client.id}
               type="button"
-              className={`list-item${selectedId === client.id ? ' active' : ''}`}
+              className={`clients-panel__item${selectedId === client.id ? ' is-active' : ''}`}
               onClick={() => onSelect(client)}
             >
-              <span className="list-item-title">{client.name}</span>
-              <span className="list-item-meta">{client.status}</span>
+              <span className="clients-panel__item-main">
+                <span className="clients-panel__item-title">{client.name}</span>
+                <span className="clients-panel__item-meta">{client.status}</span>
+              </span>
             </button>
           ))}
       </div>
+
+      <footer className="clients-panel__footer">Select a client to load projects</footer>
     </section>
   )
 })

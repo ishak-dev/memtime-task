@@ -1,0 +1,119 @@
+.time-entries-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+  overflow: hidden;
+}
+
+.time-entries-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.time-entries-panel__header h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.time-entries-panel__pill {
+  display: inline-flex;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.time-entries-panel__pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.time-entries-panel__pagination button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.time-entries-panel__pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.time-entries-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.time-entries-panel__status,
+.time-entries-panel__empty {
+  padding: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.time-entry-block {
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font: inherit;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.time-entry-block:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.time-entry-block__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.time-entry-block__title {
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.time-entry-block__duration {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.time-entry-block__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  opacity: 0.92;
+}

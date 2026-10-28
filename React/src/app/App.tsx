@@ -10,6 +10,7 @@ import { TimeEntryForm } from '../features/time-entries/components/TimeEntryForm
 import { useTaskTimeEntries } from '../features/time-entries/hooks/useTaskTimeEntries'
 import { useTimeEntries } from '../features/time-entries/hooks/useTimeEntries'
 import type { Client, PaginationParams, Project, Task, TimeEntry } from '../types/api'
+import '../styles/theme.css'
 import './App.css'
 
 const LIST_PARAMS: PaginationParams = { limit: 50 }
@@ -66,6 +67,17 @@ function App() {
       ? timeEntriesOffset + TIME_ENTRIES_LIMIT < taskEntriesQuery.timeEntries.length
       : allEntriesQuery.timeEntries.length === TIME_ENTRIES_LIMIT
 
+  const todayLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString(undefined, {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+    [],
+  )
+
   const handleSelectClient = useCallback((client: Client) => {
     setSelectedClientId(client.id)
     setSelectedProjectId(null)
@@ -105,10 +117,13 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Memtime</h1>
+        <div className="app-brand">
+          <h1>Memtime</h1>
+          <span className="app-date">{todayLabel}</span>
+        </div>
       </header>
 
-      <main className="columns">
+      <section className="app-workspace">
         <ClientsColumn
           clients={clients}
           selectedId={selectedClientId}
@@ -132,26 +147,27 @@ function App() {
           error={tasksError}
           onSelect={handleSelectTask}
         />
-      </main>
+      </section>
 
-      <TimeEntriesList
-        timeEntries={displayedTimeEntries}
-        loading={timeEntriesLoading}
-        error={timeEntriesError}
-        limit={TIME_ENTRIES_LIMIT}
-        offset={timeEntriesOffset}
-        hasNext={hasNextTimeEntries}
-        selectedTaskId={selectedTaskId}
-        onPrevious={handlePreviousPage}
-        onNext={handleNextPage}
-        onEdit={handleEditEntry}
-      />
-
-      <TimeEntryForm
-        selectedTaskId={selectedTaskId}
-        editingEntry={editingEntry}
-        onCancelEdit={handleCancelEdit}
-      />
+      <section className="app-bottom">
+        <TimeEntriesList
+          timeEntries={displayedTimeEntries}
+          loading={timeEntriesLoading}
+          error={timeEntriesError}
+          limit={TIME_ENTRIES_LIMIT}
+          offset={timeEntriesOffset}
+          hasNext={hasNextTimeEntries}
+          selectedTaskId={selectedTaskId}
+          onPrevious={handlePreviousPage}
+          onNext={handleNextPage}
+          onEdit={handleEditEntry}
+        />
+        <TimeEntryForm
+          selectedTaskId={selectedTaskId}
+          editingEntry={editingEntry}
+          onCancelEdit={handleCancelEdit}
+        />
+      </section>
     </div>
   )
 }
