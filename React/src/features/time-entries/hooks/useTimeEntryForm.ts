@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { getDisplayErrorMessage } from '../../../shared/errors'
 import type { CreateTimeEntryRequest, TimeEntry } from '../../../types/api'
 import { fromDateTimeLocalValue, toDateTimeLocalValue } from '../utils/datetime'
 import { validateTimeEntry } from '../utils/validateTimeEntry'
@@ -128,7 +127,7 @@ export function useTimeEntryFormViewModel({
     startCreate,
     isSubmitting: createMutation.isPending || updateMutation.isPending,
     validationError,
-    apiErrorMessage: apiError ? getDisplayErrorMessage(apiError) : null,
+    apiErrorMessage: apiError ? apiError.message : null,
     successMessage,
   }
 }

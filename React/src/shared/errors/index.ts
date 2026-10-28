@@ -1,3 +1,2 @@
-export { ApiRequestError } from './ApiRequestError'
-export { ERROR_MESSAGES } from './messages'
-export { getApiResponseErrorMessage, getDisplayErrorMessage } from './getErrorMessage'
+export { HTTP_STATUS, adaptHttpError } from './httpErrorAdapter'
+export type { HttpErrorResult } from './httpErrorAdapter'

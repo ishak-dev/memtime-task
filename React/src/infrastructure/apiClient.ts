@@ -1,4 +1,4 @@
-import { ApiRequestError, getApiResponseErrorMessage } from '../shared/errors'
+import { adaptHttpError } from '../shared/errors'
 import type { PaginationParams } from '../types/api'
 
 const BASE_URL = 'https://interview-api.memtime-demo.deno.net/api/v1'
@@ -38,7 +38,8 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   })
 
   if (!response.ok) {
-    throw new ApiRequestError(response.status, await getApiResponseErrorMessage(response))
+    const { message } = await adaptHttpError(response)
+    throw new Error(message)
   }
 
   return response.json() as Promise<T>
