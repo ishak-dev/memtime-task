@@ -9,31 +9,51 @@ import { TimeEntriesList } from '../features/time-entries/components/TimeEntries
 import { TimeEntryForm } from '../features/time-entries/components/TimeEntryForm'
 import { useTaskTimeEntries } from '../features/time-entries/hooks/useTaskTimeEntries'
 import { useTimeEntries } from '../features/time-entries/hooks/useTimeEntries'
-import type { Client, PaginationParams, Project, Task, TimeEntry } from '../types/api'
+import type { Client, Project, Task, TimeEntry } from '../types/api'
 import '../styles/theme.css'
 import './App.css'
 
-const LIST_PARAMS: PaginationParams = { limit: 50 }
+const LIST_LIMIT = 10
 const TIME_ENTRIES_LIMIT = 10
 
 function App() {
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null)
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+
+  const [clientsOffset, setClientsOffset] = useState(0)
+  const [projectsOffset, setProjectsOffset] = useState(0)
+  const [tasksOffset, setTasksOffset] = useState(0)
   const [timeEntriesOffset, setTimeEntriesOffset] = useState(0)
   const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null)
 
-  const { clients, loading: clientsLoading, error: clientsError } = useClients(LIST_PARAMS)
+  const {
+    clients,
+    loading: clientsLoading,
+    isFetching: clientsFetching,
+    error: clientsError,
+  } = useClients({
+    limit: LIST_LIMIT,
+    offset: clientsOffset,
+  })
   const {
     projects,
     loading: projectsLoading,
+    isFetching: projectsFetching,
     error: projectsError,
-  } = useClientProjects(selectedClientId, LIST_PARAMS)
+  } = useClientProjects(selectedClientId, {
+    limit: LIST_LIMIT,
+    offset: projectsOffset,
+  })
   const {
     tasks,
     loading: tasksLoading,
+    isFetching: tasksFetching,
     error: tasksError,
-  } = useProjectTasks(selectedProjectId, LIST_PARAMS)
+  } = useProjectTasks(selectedProjectId, {
+    limit: LIST_LIMIT,
+    offset: tasksOffset,
+  })
 
   const allEntriesQuery = useTimeEntries(
     { limit: TIME_ENTRIES_LIMIT, offset: timeEntriesOffset },
@@ -62,6 +82,9 @@ function App() {
   const timeEntriesError =
     selectedTaskId !== null ? taskEntriesQuery.error : allEntriesQuery.error
 
+  const hasNextClients = clients.length === LIST_LIMIT
+  const hasNextProjects = projects.length === LIST_LIMIT
+  const hasNextTasks = tasks.length === LIST_LIMIT
   const hasNextTimeEntries =
     selectedTaskId !== null
       ? timeEntriesOffset + TIME_ENTRIES_LIMIT < taskEntriesQuery.timeEntries.length
@@ -82,6 +105,8 @@ function App() {
     setSelectedClientId(client.id)
     setSelectedProjectId(null)
     setSelectedTaskId(null)
+    setProjectsOffset(0)
+    setTasksOffset(0)
     setTimeEntriesOffset(0)
     setEditingEntry(null)
   }, [])
@@ -89,6 +114,7 @@ function App() {
   const handleSelectProject = useCallback((project: Project) => {
     setSelectedProjectId(project.id)
     setSelectedTaskId(null)
+    setTasksOffset(0)
     setTimeEntriesOffset(0)
     setEditingEntry(null)
   }, [])
@@ -98,11 +124,35 @@ function App() {
     setTimeEntriesOffset(0)
   }, [])
 
-  const handlePreviousPage = useCallback(() => {
+  const handlePreviousClients = useCallback(() => {
+    setClientsOffset((current) => Math.max(0, current - LIST_LIMIT))
+  }, [])
+
+  const handleNextClients = useCallback(() => {
+    setClientsOffset((current) => current + LIST_LIMIT)
+  }, [])
+
+  const handlePreviousProjects = useCallback(() => {
+    setProjectsOffset((current) => Math.max(0, current - LIST_LIMIT))
+  }, [])
+
+  const handleNextProjects = useCallback(() => {
+    setProjectsOffset((current) => current + LIST_LIMIT)
+  }, [])
+
+  const handlePreviousTasks = useCallback(() => {
+    setTasksOffset((current) => Math.max(0, current - LIST_LIMIT))
+  }, [])
+
+  const handleNextTasks = useCallback(() => {
+    setTasksOffset((current) => current + LIST_LIMIT)
+  }, [])
+
+  const handlePreviousTimeEntries = useCallback(() => {
     setTimeEntriesOffset((current) => Math.max(0, current - TIME_ENTRIES_LIMIT))
   }, [])
 
-  const handleNextPage = useCallback(() => {
+  const handleNextTimeEntries = useCallback(() => {
     setTimeEntriesOffset((current) => current + TIME_ENTRIES_LIMIT)
   }, [])
 
@@ -128,7 +178,13 @@ function App() {
           clients={clients}
           selectedId={selectedClientId}
           loading={clientsLoading}
+          isFetching={clientsFetching}
           error={clientsError}
+          page={Math.floor(clientsOffset / LIST_LIMIT) + 1}
+          hasPrevious={clientsOffset > 0}
+          hasNext={hasNextClients}
+          onPrevious={handlePreviousClients}
+          onNext={handleNextClients}
           onSelect={handleSelectClient}
         />
         <ProjectsColumn
@@ -136,7 +192,13 @@ function App() {
           selectedId={selectedProjectId}
           hasClient={selectedClientId !== null}
           loading={projectsLoading}
+          isFetching={projectsFetching}
           error={projectsError}
+          page={Math.floor(projectsOffset / LIST_LIMIT) + 1}
+          hasPrevious={projectsOffset > 0}
+          hasNext={hasNextProjects}
+          onPrevious={handlePreviousProjects}
+          onNext={handleNextProjects}
           onSelect={handleSelectProject}
         />
         <TasksColumn
@@ -144,7 +206,13 @@ function App() {
           selectedId={selectedTaskId}
           hasProject={selectedProjectId !== null}
           loading={tasksLoading}
+          isFetching={tasksFetching}
           error={tasksError}
+          page={Math.floor(tasksOffset / LIST_LIMIT) + 1}
+          hasPrevious={tasksOffset > 0}
+          hasNext={hasNextTasks}
+          onPrevious={handlePreviousTasks}
+          onNext={handleNextTasks}
           onSelect={handleSelectTask}
         />
       </section>
@@ -158,8 +226,8 @@ function App() {
           offset={timeEntriesOffset}
           hasNext={hasNextTimeEntries}
           selectedTaskId={selectedTaskId}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
+          onPrevious={handlePreviousTimeEntries}
+          onNext={handleNextTimeEntries}
           onEdit={handleEditEntry}
         />
         <TimeEntryForm
