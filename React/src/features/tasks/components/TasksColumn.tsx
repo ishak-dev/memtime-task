@@ -3,16 +3,20 @@ import type { Task } from '../../../types/api'
 
 type TasksColumnProps = {
   tasks: Task[]
+  selectedId: number | null
   hasProject: boolean
   loading: boolean
   error: string | null
+  onSelect: (task: Task) => void
 }
 
 export const TasksColumn = memo(function TasksColumn({
   tasks,
+  selectedId,
   hasProject,
   loading,
   error,
+  onSelect,
 }: TasksColumnProps) {
   return (
     <section className="column">
@@ -28,10 +32,15 @@ export const TasksColumn = memo(function TasksColumn({
           !loading &&
           !error &&
           tasks.map((task) => (
-            <div key={task.id} className="list-item">
+            <button
+              key={task.id}
+              type="button"
+              className={`list-item${selectedId === task.id ? ' active' : ''}`}
+              onClick={() => onSelect(task)}
+            >
               <span className="list-item-title">{task.name}</span>
               <span className="list-item-meta">{task.status}</span>
-            </div>
+            </button>
           ))}
       </div>
     </section>
