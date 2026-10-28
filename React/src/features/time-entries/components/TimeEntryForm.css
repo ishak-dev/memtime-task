@@ -53,7 +53,8 @@
   color: var(--text-muted);
 }
 
-.time-entry-form-panel__body input {
+.time-entry-form-panel__body input,
+.time-entry-form-panel__body select {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 0.65rem 0.75rem;
@@ -63,7 +64,8 @@
   background: #fff;
 }
 
-.time-entry-form-panel__body input:focus {
+.time-entry-form-panel__body input:focus,
+.time-entry-form-panel__body select:focus {
   outline: 2px solid var(--primary-soft);
   border-color: var(--primary);
 }

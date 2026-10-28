@@ -1,14 +1,16 @@
-import type { TimeEntry } from '../../../types/api'
+import type { Task, TimeEntry } from '../../../types/api'
 import { useTimeEntryFormViewModel } from '../hooks/useTimeEntryForm'
 import './TimeEntryForm.css'
 
 type TimeEntryFormProps = {
+  tasks: Task[]
   selectedTaskId: number | null
   editingEntry: TimeEntry | null
   onCancelEdit: () => void
 }
 
 export function TimeEntryForm({
+  tasks,
   selectedTaskId,
   editingEntry,
   onCancelEdit,
@@ -30,6 +32,9 @@ export function TimeEntryForm({
     onCancelEdit,
   })
 
+  const hasSelectedTaskOption =
+    form.taskId !== '' && tasks.some((task) => String(task.id) === form.taskId)
+
   return (
     <section className="time-entry-form-panel">
       <header className="time-entry-form-panel__header">
@@ -43,14 +48,24 @@ export function TimeEntryForm({
 
       <form className="time-entry-form-panel__body" onSubmit={submit}>
         <label>
-          Task ID
-          <input
-            type="number"
-            min={1}
+          Task
+          <select
             required
             value={form.taskId}
             onChange={(event) => updateField('taskId', event.target.value)}
-          />
+          >
+            <option value="" disabled>
+              {tasks.length === 0 ? 'Select a project to load tasks' : 'Select a task'}
+            </option>
+            {form.taskId && !hasSelectedTaskOption && (
+              <option value={form.taskId}>Task #{form.taskId}</option>
+            )}
+            {tasks.map((task) => (
+              <option key={task.id} value={task.id}>
+                {task.name} (#{task.id})
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>

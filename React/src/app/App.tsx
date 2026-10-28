@@ -4,6 +4,7 @@ import { useClients } from '../features/clients/hooks/useClients'
 import { ProjectsColumn } from '../features/projects/components/ProjectsColumn'
 import { useClientProjects } from '../features/projects/hooks/useClientProjects'
 import { TasksColumn } from '../features/tasks/components/TasksColumn'
+import { useAllProjectTasks } from '../features/tasks/hooks/useAllProjectTasks'
 import { useProjectTasks } from '../features/tasks/hooks/useProjectTasks'
 import { TimeEntriesList } from '../features/time-entries/components/TimeEntriesList'
 import { TimeEntryForm } from '../features/time-entries/components/TimeEntryForm'
@@ -54,6 +55,7 @@ function App() {
     limit: LIST_LIMIT,
     offset: tasksOffset,
   })
+  const { tasks: allProjectTasks } = useAllProjectTasks(selectedProjectId)
 
   const allEntriesQuery = useTimeEntries(
     { limit: TIME_ENTRIES_LIMIT, offset: timeEntriesOffset },
@@ -231,6 +233,7 @@ function App() {
           onEdit={handleEditEntry}
         />
         <TimeEntryForm
+          tasks={allProjectTasks}
           selectedTaskId={selectedTaskId}
           editingEntry={editingEntry}
           onCancelEdit={handleCancelEdit}

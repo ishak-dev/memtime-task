@@ -2,7 +2,7 @@ import type { CreateTimeEntryRequest } from '../../../types/api'
 
 export function validateTimeEntry(payload: CreateTimeEntryRequest): string | null {
   if (!Number.isFinite(payload.taskId) || payload.taskId <= 0) {
-    return 'Task ID must be a positive number'
+    return 'Select a task'
   }
   if (!payload.comment.trim()) {
     return 'Comment is required'
