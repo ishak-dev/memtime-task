@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { Project } from '../../../types/api'
 
 type ProjectsColumnProps = {
@@ -9,7 +10,7 @@ type ProjectsColumnProps = {
   onSelect: (project: Project) => void
 }
 
-export function ProjectsColumn({
+export const ProjectsColumn = memo(function ProjectsColumn({
   projects,
   selectedId,
   hasClient,
@@ -44,4 +45,4 @@ export function ProjectsColumn({
       </div>
     </section>
   )
-}
+})

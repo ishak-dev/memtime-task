@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { Task } from '../../../types/api'
 
 type TasksColumnProps = {
@@ -7,7 +8,12 @@ type TasksColumnProps = {
   error: string | null
 }
 
-export function TasksColumn({ tasks, hasProject, loading, error }: TasksColumnProps) {
+export const TasksColumn = memo(function TasksColumn({
+  tasks,
+  hasProject,
+  loading,
+  error,
+}: TasksColumnProps) {
   return (
     <section className="column">
       <header className="column-header">Tasks</header>
@@ -30,4 +36,4 @@ export function TasksColumn({ tasks, hasProject, loading, error }: TasksColumnPr
       </div>
     </section>
   )
-}
+})
