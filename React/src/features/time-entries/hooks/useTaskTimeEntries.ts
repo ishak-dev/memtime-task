@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
+import { ERROR_MESSAGES } from '../../../shared/errors'
 import { getAllTimeEntries } from '../services/timeEntriesService'
 
 export function useTaskTimeEntries(taskId: number | null) {
@@ -17,6 +18,6 @@ export function useTaskTimeEntries(taskId: number | null) {
   return {
     timeEntries,
     loading: query.isPending && taskId !== null,
-    error: query.isError ? 'Failed to load time entries' : null,
+    error: query.isError ? ERROR_MESSAGES.loadTimeEntries : null,
   }
 }

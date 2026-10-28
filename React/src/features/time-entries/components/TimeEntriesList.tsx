@@ -11,6 +11,7 @@ type TimeEntriesListProps = {
   selectedTaskId: number | null
   onPrevious: () => void
   onNext: () => void
+  onEdit: (entry: TimeEntry) => void
 }
 
 function formatDate(value: string) {
@@ -27,6 +28,7 @@ export const TimeEntriesList = memo(function TimeEntriesList({
   selectedTaskId,
   onPrevious,
   onNext,
+  onEdit,
 }: TimeEntriesListProps) {
   const page = Math.floor(offset / limit) + 1
   const hasPrevious = offset > 0
@@ -70,6 +72,7 @@ export const TimeEntriesList = memo(function TimeEntriesList({
                 <th>Start</th>
                 <th>End</th>
                 <th>Created At</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +84,11 @@ export const TimeEntriesList = memo(function TimeEntriesList({
                   <td>{formatDate(entry.start)}</td>
                   <td>{formatDate(entry.end)}</td>
                   <td>{formatDate(entry.createdAt)}</td>
+                  <td>
+                    <button type="button" className="link-button" onClick={() => onEdit(entry)}>
+                      Edit
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

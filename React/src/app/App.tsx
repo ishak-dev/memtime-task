@@ -6,9 +6,10 @@ import { useClientProjects } from '../features/projects/hooks/useClientProjects'
 import { TasksColumn } from '../features/tasks/components/TasksColumn'
 import { useProjectTasks } from '../features/tasks/hooks/useProjectTasks'
 import { TimeEntriesList } from '../features/time-entries/components/TimeEntriesList'
+import { TimeEntryForm } from '../features/time-entries/components/TimeEntryForm'
 import { useTaskTimeEntries } from '../features/time-entries/hooks/useTaskTimeEntries'
 import { useTimeEntries } from '../features/time-entries/hooks/useTimeEntries'
-import type { Client, PaginationParams, Project, Task } from '../types/api'
+import type { Client, PaginationParams, Project, Task, TimeEntry } from '../types/api'
 import './App.css'
 
 const LIST_PARAMS: PaginationParams = { limit: 50 }
@@ -19,6 +20,7 @@ function App() {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [timeEntriesOffset, setTimeEntriesOffset] = useState(0)
+  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null)
 
   const { clients, loading: clientsLoading, error: clientsError } = useClients(LIST_PARAMS)
   const {
@@ -69,12 +71,14 @@ function App() {
     setSelectedProjectId(null)
     setSelectedTaskId(null)
     setTimeEntriesOffset(0)
+    setEditingEntry(null)
   }, [])
 
   const handleSelectProject = useCallback((project: Project) => {
     setSelectedProjectId(project.id)
     setSelectedTaskId(null)
     setTimeEntriesOffset(0)
+    setEditingEntry(null)
   }, [])
 
   const handleSelectTask = useCallback((task: Task) => {
@@ -88,6 +92,14 @@ function App() {
 
   const handleNextPage = useCallback(() => {
     setTimeEntriesOffset((current) => current + TIME_ENTRIES_LIMIT)
+  }, [])
+
+  const handleEditEntry = useCallback((entry: TimeEntry) => {
+    setEditingEntry(entry)
+  }, [])
+
+  const handleCancelEdit = useCallback(() => {
+    setEditingEntry(null)
   }, [])
 
   return (
@@ -132,6 +144,13 @@ function App() {
         selectedTaskId={selectedTaskId}
         onPrevious={handlePreviousPage}
         onNext={handleNextPage}
+        onEdit={handleEditEntry}
+      />
+
+      <TimeEntryForm
+        selectedTaskId={selectedTaskId}
+        editingEntry={editingEntry}
+        onCancelEdit={handleCancelEdit}
       />
     </div>
   )

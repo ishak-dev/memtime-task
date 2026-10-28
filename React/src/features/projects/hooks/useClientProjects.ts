@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { ERROR_MESSAGES } from '../../../shared/errors'
 import type { PaginationParams } from '../../../types/api'
 import { getClientProjects } from '../services/projectsService'
 
@@ -12,6 +13,6 @@ export function useClientProjects(clientId: number | null, params?: PaginationPa
   return {
     projects: query.data ?? [],
     loading: query.isPending && clientId !== null,
-    error: query.isError ? 'Failed to load projects' : null,
+    error: query.isError ? ERROR_MESSAGES.loadProjects : null,
   }
 }

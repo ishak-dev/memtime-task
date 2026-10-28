@@ -1,5 +1,10 @@
 import { request } from '../../../infrastructure/apiClient'
-import type { PaginationParams, TimeEntry } from '../../../types/api'
+import type {
+  CreateTimeEntryRequest,
+  PaginationParams,
+  TimeEntry,
+  UpdateTimeEntryRequest,
+} from '../../../types/api'
 
 export function getTimeEntries(params?: PaginationParams) {
   return request<TimeEntry[]>('/time-entries', { params })
@@ -21,4 +26,18 @@ export async function getAllTimeEntries(pageSize = 50): Promise<TimeEntry[]> {
   }
 
   return all
+}
+
+export function createTimeEntry(payload: CreateTimeEntryRequest) {
+  return request<TimeEntry>('/time-entries', {
+    method: 'POST',
+    body: payload,
+  })
+}
+
+export function updateTimeEntry(id: number, payload: UpdateTimeEntryRequest) {
+  return request<TimeEntry>(`/time-entries/${id}`, {
+    method: 'PUT',
+    body: payload,
+  })
 }

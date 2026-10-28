@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { ERROR_MESSAGES } from '../../../shared/errors'
 import type { PaginationParams } from '../../../types/api'
 import { getTimeEntries } from '../services/timeEntriesService'
 
@@ -12,6 +13,6 @@ export function useTimeEntries(params?: PaginationParams, enabled = true) {
   return {
     timeEntries: query.data ?? [],
     loading: query.isPending && enabled,
-    error: query.isError ? 'Failed to load time entries' : null,
+    error: query.isError ? ERROR_MESSAGES.loadTimeEntries : null,
   }
 }
