@@ -86,17 +86,3 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-
-.time-entry-form-panel__message {
-  margin: 0;
-  padding: 0 1.15rem 1.15rem;
-  font-size: 0.875rem;
-}
-
-.time-entry-form-panel__message--error {
-  color: var(--danger);
-}
-
-.time-entry-form-panel__message--success {
-  color: var(--success);
-}

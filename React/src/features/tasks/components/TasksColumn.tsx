@@ -46,13 +46,11 @@ export const TasksColumn = memo(function TasksColumn({
       <div className={`tasks-panel__body${isFetching ? ' is-fetching' : ''}`}>
         {!hasProject && <p className="tasks-panel__empty">Select a project</p>}
         {showInitialLoading && <p className="tasks-panel__status">Loading tasks…</p>}
-        {hasProject && error && <p className="tasks-panel__status">{error}</p>}
-        {hasProject && !showInitialLoading && !error && tasks.length === 0 && (
+        {hasProject && !showInitialLoading && tasks.length === 0 && !error && (
           <p className="tasks-panel__empty">No tasks found</p>
         )}
         {hasProject &&
           !showInitialLoading &&
-          !error &&
           tasks.map((task) => (
             <button
               key={task.id}

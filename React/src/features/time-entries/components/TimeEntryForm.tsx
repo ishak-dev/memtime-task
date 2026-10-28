@@ -23,9 +23,6 @@ export function TimeEntryForm({
     submit,
     startCreate,
     isSubmitting,
-    validationError,
-    apiErrorMessage,
-    successMessage,
   } = useTimeEntryFormViewModel({
     selectedTaskId,
     editingEntry,
@@ -102,22 +99,6 @@ export function TimeEntryForm({
           {isSubmitting ? 'Saving…' : isEditing ? 'Update entry' : 'Create entry'}
         </button>
       </form>
-
-      {validationError && (
-        <p className="time-entry-form-panel__message time-entry-form-panel__message--error">
-          {validationError}
-        </p>
-      )}
-      {apiErrorMessage && (
-        <p className="time-entry-form-panel__message time-entry-form-panel__message--error">
-          {apiErrorMessage}
-        </p>
-      )}
-      {successMessage && (
-        <p className="time-entry-form-panel__message time-entry-form-panel__message--success">
-          {successMessage}
-        </p>
-      )}
     </section>
   )
 }

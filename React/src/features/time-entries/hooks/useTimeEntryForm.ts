@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { toast } from 'sonner'
 import type { CreateTimeEntryRequest, TimeEntry } from '../../../types/api'
 import { fromDateTimeLocalValue, toDateTimeLocalValue } from '../utils/datetime'
 import { validateTimeEntry } from '../utils/validateTimeEntry'
@@ -36,8 +37,6 @@ export function useTimeEntryFormViewModel({
   const updateMutation = useUpdateTimeEntry()
 
   const [form, setForm] = useState<TimeEntryFormState>(emptyForm)
-  const [validationError, setValidationError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (editingEntry) {
@@ -47,8 +46,6 @@ export function useTimeEntryFormViewModel({
         start: toDateTimeLocalValue(editingEntry.start),
         end: toDateTimeLocalValue(editingEntry.end),
       })
-      setValidationError(null)
-      setSuccessMessage(null)
       return
     }
 
@@ -67,8 +64,6 @@ export function useTimeEntryFormViewModel({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setSuccessMessage(null)
-    setValidationError(null)
     createMutation.reset()
     updateMutation.reset()
 
@@ -81,7 +76,7 @@ export function useTimeEntryFormViewModel({
 
     const localError = validateTimeEntry(payload)
     if (localError) {
-      setValidationError(localError)
+      toast.error(localError)
       return
     }
 
@@ -91,32 +86,28 @@ export function useTimeEntryFormViewModel({
           id: editingEntry.id,
           payload,
         })
-        setSuccessMessage(
+        toast.success(
           `Updated time entry #${updated.id} (task ${updated.taskId}): ${updated.comment}`,
         )
         return
       }
 
       const created = await createMutation.mutateAsync(payload)
-      setSuccessMessage(`Created time entry #${created.id}`)
+      toast.success(`Created time entry #${created.id}`)
       setForm({
         ...emptyForm,
         taskId: selectedTaskId !== null ? String(selectedTaskId) : '',
       })
     } catch {
-      // API error is exposed via mutation state
+      // MutationCache already shows a toast for API errors
     }
   }
 
   function startCreate() {
     onCancelEdit()
-    setSuccessMessage(null)
-    setValidationError(null)
     createMutation.reset()
     updateMutation.reset()
   }
-
-  const apiError = createMutation.error ?? updateMutation.error
 
   return {
     isEditing,
@@ -126,8 +117,5 @@ export function useTimeEntryFormViewModel({
     submit,
     startCreate,
     isSubmitting: createMutation.isPending || updateMutation.isPending,
-    validationError,
-    apiErrorMessage: apiError ? apiError.message : null,
-    successMessage,
   }
 }

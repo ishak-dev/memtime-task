@@ -44,13 +44,11 @@ export const ProjectsColumn = memo(function ProjectsColumn({
       <div className={`projects-panel__body${isFetching ? ' is-fetching' : ''}`}>
         {!hasClient && <p className="projects-panel__empty">Select a client</p>}
         {showInitialLoading && <p className="projects-panel__status">Loading projects…</p>}
-        {hasClient && error && <p className="projects-panel__status">{error}</p>}
-        {hasClient && !showInitialLoading && !error && projects.length === 0 && (
+        {hasClient && !showInitialLoading && projects.length === 0 && !error && (
           <p className="projects-panel__empty">No projects found</p>
         )}
         {hasClient &&
           !showInitialLoading &&
-          !error &&
           projects.map((project) => (
             <button
               key={project.id}

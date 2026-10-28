@@ -56,8 +56,7 @@ export const TimeEntriesList = memo(function TimeEntriesList({
 
       <div className="time-entries-panel__body">
         {loading && <p className="time-entries-panel__status">Loading time entries…</p>}
-        {error && <p className="time-entries-panel__status">{error}</p>}
-        {!loading && !error && timeEntries.length === 0 && (
+        {!loading && timeEntries.length === 0 && !error && (
           <p className="time-entries-panel__empty">
             {selectedTaskId !== null
               ? 'No time entries for this task'
@@ -66,7 +65,6 @@ export const TimeEntriesList = memo(function TimeEntriesList({
         )}
 
         {!loading &&
-          !error &&
           timeEntries.map((entry) => (
             <button
               key={entry.id}

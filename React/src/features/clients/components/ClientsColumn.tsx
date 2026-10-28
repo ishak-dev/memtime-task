@@ -43,12 +43,10 @@ export const ClientsColumn = memo(function ClientsColumn({
 
       <div className={`clients-panel__body${isFetching ? ' is-fetching' : ''}`}>
         {showInitialLoading && <p className="clients-panel__status">Loading clients…</p>}
-        {error && <p className="clients-panel__status">{error}</p>}
-        {!showInitialLoading && !error && clients.length === 0 && (
+        {!showInitialLoading && clients.length === 0 && !error && (
           <p className="clients-panel__empty">No clients found</p>
         )}
         {!showInitialLoading &&
-          !error &&
           clients.map((client) => (
             <button
               key={client.id}
