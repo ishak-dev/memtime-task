@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { getAccentColor } from "../../../shared/utils/accentColor";
 import {
+  formatCreatedAt,
   formatDuration,
   formatTimeRange,
 } from "../../../shared/utils/duration";
@@ -92,8 +93,13 @@ export const TimeEntriesList = memo(function TimeEntriesList({
                 </span>
               </div>
               <div className="time-entry-block__meta">
-                <span>Task {entry.taskId}</span>
+                <span>
+                  ID {entry.id} · Task {entry.taskId}
+                </span>
                 <span>{formatTimeRange(entry.start, entry.end)}</span>
+              </div>
+              <div className="time-entry-block__meta time-entry-block__meta--secondary">
+                <span>Created {formatCreatedAt(entry.createdAt)}</span>
               </div>
             </button>
           ))}

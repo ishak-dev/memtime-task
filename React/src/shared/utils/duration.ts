@@ -17,3 +17,16 @@ export function formatTimeRange(start: string, end: string): string {
   }
   return `${new Date(start).toLocaleTimeString([], options)} – ${new Date(end).toLocaleTimeString([], options)}`
 }
+
+export function formatCreatedAt(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return iso
+
+  return date.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}

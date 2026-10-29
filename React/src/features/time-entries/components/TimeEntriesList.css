@@ -117,3 +117,7 @@
   font-size: 0.75rem;
   opacity: 0.92;
 }
+
+.time-entry-block__meta--secondary {
+  opacity: 0.8;
+}
