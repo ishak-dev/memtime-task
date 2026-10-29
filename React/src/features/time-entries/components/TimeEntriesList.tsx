@@ -1,21 +1,24 @@
-import { memo } from 'react'
-import { getAccentColor } from '../../../shared/utils/accentColor'
-import { formatDuration, formatTimeRange } from '../../../shared/utils/duration'
-import type { TimeEntry } from '../../../types/api'
-import './TimeEntriesList.css'
+import { memo } from "react";
+import { getAccentColor } from "../../../shared/utils/accentColor";
+import {
+  formatDuration,
+  formatTimeRange,
+} from "../../../shared/utils/duration";
+import type { TimeEntry } from "../../../types/api";
+import "./TimeEntriesList.css";
 
 type TimeEntriesListProps = {
-  timeEntries: TimeEntry[]
-  loading: boolean
-  error: string | null
-  limit: number
-  offset: number
-  hasNext: boolean
-  selectedTaskId: number | null
-  onPrevious: () => void
-  onNext: () => void
-  onEdit: (entry: TimeEntry) => void
-}
+  timeEntries: TimeEntry[];
+  loading: boolean;
+  error: string | null;
+  limit: number;
+  offset: number;
+  hasNext: boolean;
+  selectedTaskId: number | null;
+  onPrevious: () => void;
+  onNext: () => void;
+  onEdit: (entry: TimeEntry) => void;
+};
 
 export const TimeEntriesList = memo(function TimeEntriesList({
   timeEntries,
@@ -29,22 +32,26 @@ export const TimeEntriesList = memo(function TimeEntriesList({
   onNext,
   onEdit,
 }: TimeEntriesListProps) {
-  const page = Math.floor(offset / limit) + 1
-  const hasPrevious = offset > 0
+  const page = Math.floor(offset / limit) + 1;
+  const hasPrevious = offset > 0;
 
   return (
-    <section className="time-entries-panel">
+    <section className="time-entries-panel" data-testid="time-entries-panel">
       <header className="time-entries-panel__header">
         <div>
           <h2>Time Entries</h2>
           <span className="time-entries-panel__pill">
             {selectedTaskId !== null
               ? `Task ${selectedTaskId}`
-              : 'Create your time entries here'}
+              : "Create your time entries here"}
           </span>
         </div>
         <div className="time-entries-panel__pagination">
-          <button type="button" onClick={onPrevious} disabled={!hasPrevious || loading}>
+          <button
+            type="button"
+            onClick={onPrevious}
+            disabled={!hasPrevious || loading}
+          >
             Prev
           </button>
           <span>Page {page}</span>
@@ -55,12 +62,14 @@ export const TimeEntriesList = memo(function TimeEntriesList({
       </header>
 
       <div className="time-entries-panel__body">
-        {loading && <p className="time-entries-panel__status">Loading time entries…</p>}
+        {loading && (
+          <p className="time-entries-panel__status">Loading time entries…</p>
+        )}
         {!loading && timeEntries.length === 0 && !error && (
           <p className="time-entries-panel__empty">
             {selectedTaskId !== null
-              ? 'No time entries for this task'
-              : 'No time entries found'}
+              ? "No time entries for this task"
+              : "No time entries found"}
           </p>
         )}
 
@@ -69,6 +78,7 @@ export const TimeEntriesList = memo(function TimeEntriesList({
             <button
               key={entry.id}
               type="button"
+              data-testid={`time-entry-item-${entry.id}`}
               className="time-entry-block"
               style={{ background: getAccentColor(entry.taskId) }}
               onClick={() => onEdit(entry)}
@@ -89,5 +99,5 @@ export const TimeEntriesList = memo(function TimeEntriesList({
           ))}
       </div>
     </section>
-  )
-})
+  );
+});
